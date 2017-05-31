@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import itertools
+
+if __name__ == '__main__':
+    l = [1, 2, 3, 4, 5]
+
+    # 組み合わせ (1)
+    # 繰り返しを許さない: 1,1 はない
+    # 順序が違っても同じと見なす: 1,2 と 2,1 は同じ
+    for element in itertools.combinations(l, 2):
+        print(element)

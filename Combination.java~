@@ -1,0 +1,29 @@
+public class Combination{
+
+    pubic static void combination_return(String tmp, int length, char[] value){
+	// 検索するステップに達したとき
+	if(tmp.length() == length){
+	    System.out.println(tmp);
+	}else{
+	    // それ以外
+	    for(int i=0; i < value.length; i++){
+		combination_return(tmp + value[i], length, value);
+	    }
+	}
+    }
+
+    public static main(String args[]){
+	BufferedReader in
+	    = new BufferedReader(new InputStreamReader(System.in));
+	System.out.println("input word");
+	String input = new String(in.readLine());
+	String[] word = new String(input.length());
+	for(int i=0; i < input.length(); i++){
+	    String s = String.valueOf(input.charAt(i));
+	    word[i] = s;
+	}
+	for(int n=0: n < word.length(); n++){
+	    combination_return("", word.length(), word);
+	}
+      
+	
