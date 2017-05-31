@@ -3,6 +3,11 @@
 
 import itertools
 import numpy as np
+import re
+
+matchWord = []
+wordA = ['j','k','q','x','z']
+wordB = ['c','f','h','l','m','p','v','w','y']
 
 def toList(string):
     wordList = [""] * (len(string))
@@ -15,7 +20,7 @@ def makeDictionary(filename):
     dictionary = [""] * 72421
     line = file.readline()
     for i in range(72412):
-        text = line.rstrip('\n')
+        text = (line.rstrip('\n')).lower()
         dictionary[i] = text
         line = file.readline()
     file.close()
@@ -26,7 +31,7 @@ def makeSortedDictionary(filename):
     sortedDictionary = [""] * 72421
     line = file.readline()
     for i in range(72412):
-        text = line.rstrip('\n')
+        text = (line.rstrip('\n')).lower()
         listedLine = toList(text)
         listedLine.sort()
         sortedDictionary[i] = toString(listedLine)
@@ -39,10 +44,25 @@ def toString(lst):
     result = "".join(maped_list)
     return result
     
-def matchWord(input, dictionary, sortedDictionary):    
+def matchWord(input, dictionary, sortedDictionary):
+    global matchWord
     if ((input in sortedDictionary) == True):
         index = sortedDictionary.index(input)
-        print(dictionary[index])
+        counter = 1
+        word = dictionary[index]
+        for i in range(len(word)):
+            if((word[i] in wordA) == True):
+               counter += 3
+            elif((word[i] in wordB) == True ):
+                counter += 2
+            else:
+                counter += 1
+
+        pair = []
+        pair.append(counter * counter)
+        pair.append(word)
+        wordPair = " : ".join(map(str,pair))
+        return wordPair
     else:
         pass
     
@@ -51,11 +71,19 @@ if __name__ == '__main__':
     sortedDictionary = makeSortedDictionary('dictionary.txt')
     input = raw_input()
     wordList = toList(input)
+    if (("q" in wordList) == True):
+        index = wordList.index("q")
+        wordList[index] = "qu"
     wordList.sort() # 入力文字列を昇順にソート
+    resultList = []
     # 組み合わせ (1)
     # 繰り返しを許さない: 1,1 はない
     # 順序が違っても同じと見なす: 1,2 と 2,1 は同じ
-    for i in range(3, len(wordList)+1):
+    for i in range(5, len(wordList)+1):
         for element in itertools.combinations(wordList, i):
-            matchWord(toString(element), dictionary, sortedDictionary)
-      
+            result = matchWord(toString(element), dictionary, sortedDictionary)
+            if((result in resultList) == False):
+                resultList.append(result)
+    for word in resultList:
+        print(word)
+            
