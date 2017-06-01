@@ -4,8 +4,9 @@
 import itertools
 import numpy as np
 import re
+from collections import OrderedDict
 
-matchWord = []
+matchWord = [""]
 wordA = ['j','k','q','x','z']
 wordB = ['c','f','h','l','m','p','v','w','y']
 
@@ -17,7 +18,7 @@ def toList(string):
 
 def makeDictionary(filename):
     file = open(filename)
-    dictionary = [""] * 72421
+    dictionary = OrderedDict()
     line = file.readline()
     for i in range(72412):
         text = (line.rstrip('\n')).lower()
@@ -28,13 +29,13 @@ def makeDictionary(filename):
         
 def makeSortedDictionary(filename):
     file = open(filename)
-    sortedDictionary = [""] * 72421
+    sortedDictionary = OrderedDict()
     line = file.readline()
     for i in range(72412):
         text = (line.rstrip('\n')).lower()
         listedLine = toList(text)
         listedLine.sort()
-        sortedDictionary[i] = toString(listedLine)
+        sortedDictionary[toString(listedLine)] = i
         line = file.readline()
     file.close()
     return sortedDictionary
@@ -47,7 +48,7 @@ def toString(lst):
 def matchWord(input, dictionary, sortedDictionary):
     global matchWord
     if ((input in sortedDictionary) == True):
-        index = sortedDictionary.index(input)
+        index = sortedDictionary[input]
         counter = 1
         word = dictionary[index]
         for i in range(len(word)):
@@ -57,12 +58,7 @@ def matchWord(input, dictionary, sortedDictionary):
                 counter += 2
             else:
                 counter += 1
-
-        pair = []
-        pair.append(counter * counter)
-        pair.append(word)
-        wordPair = " : ".join(map(str,pair))
-        return wordPair
+        return (counter*counter, word)
     else:
         pass
     
@@ -79,11 +75,11 @@ if __name__ == '__main__':
     # 組み合わせ (1)
     # 繰り返しを許さない: 1,1 はない
     # 順序が違っても同じと見なす: 1,2 と 2,1 は同じ
-    for i in range(5, len(wordList)+1):
+    for i in range(3, len(wordList)+1):
         for element in itertools.combinations(wordList, i):
             result = matchWord(toString(element), dictionary, sortedDictionary)
             if((result in resultList) == False):
                 resultList.append(result)
-    for word in resultList:
-        print(word)
-            
+    resultList.sort()
+    for list in resultList:
+        print(list)
